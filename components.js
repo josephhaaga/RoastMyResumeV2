@@ -91,6 +91,7 @@ class ResumeBox extends React.Component{
 		this.setState({annotations:this._makeInactive()});
 		let indexOfAnnotation = this.state.annotations.findIndex(function(a){return a.key==anno});
 		this.state.annotations[indexOfAnnotation]['active']=true;
+		// window.getElementsByClassName(indexOfAnnotation.toString());
 	}
 	_updateAnnotations(newAnnotation){
 		event.preventDefault();
@@ -129,6 +130,10 @@ class Annotation extends React.Component{
 			active: true
 		}
 	}
+	componentDidMount(){
+		console.log(this._tf);
+		this._tf.focus();
+	}
 	render(){
 		let color;
 		switch(this.props.type){
@@ -149,13 +154,19 @@ class Annotation extends React.Component{
 		};
 		const annotation_editor_style={
 			top: this.props.y,
-			left: this.props.x+30
+			left: this.props.x+30,
+			display: 'none'
 		};
-		this.props.active && this.state.active ? annotation_marker_style['opacity']=0.8 : annotation_marker_style['opacity']=0.4;
+		if(this.props.active && this.state.active){
+			annotation_marker_style['opacity']=0.8;
+			annotation_editor_style['display']='block';
+		}else{
+			annotation_marker_style['opacity']=0.4;
+		}
 		let k = this.props.k;
-		return <div><div className="annotation-marker" style={annotation_marker_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} >
+		return <div className={this.props.k}><div className="annotation-marker" style={annotation_marker_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} >
 			
-		</div><textfield className="annotation-editor" style={annotation_editor_style} >{this.props.text}</textfield></div>;
+		</div><input autoFocus ref={(input) => this._tf = input} className="annotation-editor" style={annotation_editor_style} >{this.props.text}</input></div>;
 	}
 	_clickedAnnotation(event){
 		event.preventDefault();
