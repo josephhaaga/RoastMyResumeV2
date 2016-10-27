@@ -9,9 +9,9 @@ class CommentBox extends React.Component{
 		super();
 		this.state = {
 			comments: [
-				{ id:1, body: 'Great picture!'},
-				{ id:2, body: 'Really great picture!'},
-				{ id:3, body: 'Excellent stuff!'}
+				{ id:1, body: 'Great picture!', commentType:'design'},
+				{ id:2, body: 'Really great picture!', commentType:'grammar'},
+				{ id:3, body: 'Excellent stuff!', commentType:'content'}
 			]
 		}
 	}
@@ -21,7 +21,7 @@ class CommentBox extends React.Component{
 	}
 	_getComments(){
 		return this.state.comments.map((comment)=>{
-			return (<Comment body={comment.body} key={comment.id} />);
+			return (<Comment body={comment.body} key={comment.id} commentType={comment.commentType}/>);
 				// pass comment's id as unique key; helps performance
 		});
 	}
@@ -33,13 +33,37 @@ class Comment extends React.Component{
 		this.state = {isActive: false};
 	}
 	render() {
-		return (
-			<div className="comment">
-				<p className="comment-body">
-					{this.props.body}
-				</p>
-			</div>
-		)
+		if(this.props.commentType=='design'){
+
+			return (
+				<div className="comment design">
+					<p className="comment-body">
+						{this.props.body}
+					</p>
+				</div>
+			)
+
+		}else if(this.props.commentType=='grammar'){
+
+			return (
+				<div className="comment grammar">
+					<p className="comment-body">
+						{this.props.body}
+					</p>
+				</div>
+			)
+
+		}else if(this.props.commentType=='content'){
+
+			return (
+				<div className="comment content">
+					<p className="comment-body">
+						{this.props.body}
+					</p>
+				</div>
+			)
+
+		}
 	}
 }
 
