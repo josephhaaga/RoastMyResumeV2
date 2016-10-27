@@ -102,9 +102,9 @@ class ResumeBox extends React.Component{
 		super();
 		this.state={
 			annotations : [
-				{ key:1, x: 14, y:28, type:'design'},
-				{ key:2, x:299, y:210, type:'grammar'},
-				{ key:3, x:20, y:400, type:'content'}
+				{ key:1, x: 14, y:28, type:'design', active:'false'},
+				{ key:2, x:299, y:210, type:'grammar', active:'false'},
+				{ key:3, x:20, y:400, type:'content', active:'true'}
 			]
 		}
 	}
@@ -117,11 +117,17 @@ class ResumeBox extends React.Component{
 	_updateAnnotations(newAnnotation){
 		// event.preventDefault();
 		newAnnotation['key'] = this.state.annotations.length+1;
-		this.setState({annotations: this.state.annotations.concat([newAnnotation])})
+		newAnnotation['active'] = true;
+		let previousAnnotationsInactive = this.state.annotations;
+		previousAnnotationsInactive.forEach(function(i){
+			i['active']=false;
+		})
+		console.log("previous: "+previousAnnotationsInactive);
+		this.setState({annotations: previousAnnotationsInactive.concat([newAnnotation])})
 	}
 	render(){
 		const annotations = this._getAnnotations();
-		console.log("render() ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
+		// console.log("render() ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
 		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
 		</Resume>{annotations}</div>;
 	}
@@ -146,8 +152,9 @@ class Annotation extends React.Component{
 		const annotation_style={
 			top: this.props.y,
 			left: this.props.x,
-			background: color
+			background: color,
 		};
+		this.props.active ? annotation_style['opacity']=0.8 : annotation_style['opacity']=0.4;
 		return <div className="annotation-marker" style={annotation_style} />;
 	}
 }
