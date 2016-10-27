@@ -79,26 +79,12 @@ class Comment extends React.Component{
 
 
 class Resume extends React.Component{
-	constructor(){
-		super();
-		// this.state={
-		// 	annotations:[				
-		// 		{ key:1, x: 14, y:28, type:'design'},
-		// 		{ key:2, x:299, y:210, type:'grammar'},
-		// 		{ key:3, x:20, y:400, type:'content'}
-		// 	]
-		// }
-	}
 	_alertOnClick(e){
 		e.preventDefault();
 		console.log(" ");
 		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft + document.getElementsByClassName('resume-screen')[0].offsetLeft;
 		console.log("X: "+(e.pageX - distance_from_left)+" Y:"+e.pageY);
-		// let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar', key:this.state.annotations.length+1};
 		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar'};
-		// this.setState({annotations: this.state.annotations.concat([newAnnotation]) });
-		// pass newAnnotation Up
-		// this.props.onClick(this.state.annotations);
 		this.props.onClick(newAnnotation);
 	}
 	render(){
@@ -129,7 +115,7 @@ class ResumeBox extends React.Component{
 		});
 	}
 	_updateAnnotations(newAnnotation){
-		event.preventDefault();
+		// event.preventDefault();
 		newAnnotation['key'] = this.state.annotations.length+1;
 		this.setState({annotations: this.state.annotations.concat([newAnnotation])})
 	}
