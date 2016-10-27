@@ -28,6 +28,7 @@ class CommentBox extends React.Component{
 	}
 	render(){
 		const comments = this._getComments();
+		console.log("CommentBox.state.comments: "+this.state.comments);		
 		return <div className="medium-4 column"> {comments} </div>;
 	}
 	_getComments(){
@@ -126,14 +127,15 @@ class ResumeBox extends React.Component{
 	}
 	_updateAnnotations(newAnnotations){
 		event.preventDefault();
-		console.log("~~~~newAnnotation~~~~");
-		console.log(newAnnotations);
-		console.log("~~~end newAnnotation");
-		this.setState({ annotations: newAnnotations })
+		// console.log("~~~~newAnnotation~~~~");
+		// console.log(newAnnotations);
+		// console.log("~~~end newAnnotation");
+		this.setState({ annotations: newAnnotations });
+		console.log("ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
 	}
 	render(){
 		const annotations = this._getAnnotations();
-		console.log("ResumeBox.state.annotations: "+this.state.annotations);
+		console.log("ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
 		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
 		</Resume>{annotations}</div>;
 	}
