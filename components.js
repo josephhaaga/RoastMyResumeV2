@@ -1,8 +1,19 @@
 class ResumeScreen extends React.Component{
+	constructor(){
+		super();
+		this.state = {
+			annotations: []
+		}
+	}
 	render(){
-		return <div className="row"><ResumeBox /><CommentBox /></div>;
+		return <div className="row resume-screen">
+			<ResumeBox />
+			<CommentBox />
+		</div>;
 	}
 }
+
+
 
 class CommentBox extends React.Component{
 	constructor(){
@@ -26,6 +37,8 @@ class CommentBox extends React.Component{
 		});
 	}
 }
+
+
 
 class Comment extends React.Component{
 	constructor() {
@@ -68,26 +81,22 @@ class Resume extends React.Component{
 	constructor(){
 		super();
 		this.state={
-			annotations : []
+			annotations:[				
+				{ key:1, x: 14, y:28, type:'design'},
+				{ key:2, x:299, y:210, type:'grammar'},
+				{ key:3, x:20, y:400, type:'content'}
+			]
 		}
 	}
-
-	// _addComment(author, body){
-	// 	const comment = {author,body};
-	// 	jQuery.post('/api/comments', { comment }).success(newComment => {
-	// 		this.setState({ comments: this.state.comments.concat([newComment]) });
-	// 		// state is only updated when we get new comment from API request
-	// 	})
-	// }
-
 	_alertOnClick(e){
-		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft;
-		console.log("X: "+(e.pageX-distance_from_left)+" Y:"+e.pageY);
-		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY};
+		e.preventDefault();
+		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft + document.getElementsByClassName('resume-screen')[0].offsetLeft;
+		console.log("X: "+(e.pageX - distance_from_left)+" Y:"+e.pageY);
+		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar', key:this.state.annotations.length+1};
 		this.setState({annotations: this.state.annotations.concat([newAnnotation]) });
-		this.props.onClick(newAnnotation); // pass newAnnotation Up
+		// pass newAnnotation Up
+		this.props.onClick(this.state.annotations);
 	}
-
 	render(){
 		return <div className="medium-8 column">
 			<img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  />
@@ -99,16 +108,38 @@ class Resume extends React.Component{
 
 
 class ResumeBox extends React.Component{
-
-	_updateAnnotations(newAnnotation){
-		console.log("ResumeBox._updateAnnotations() called");
-		console.log("  "+newAnnotation);
+	constructor(){
+		super();
+		this.state={
+			annotations : [
+				{ key:1, x: 14, y:28, type:'design'},
+				{ key:2, x:299, y:210, type:'grammar'},
+				{ key:3, x:20, y:400, type:'content'}
+			]
+		}
+	}
+	_getAnnotations() { // returns array of dynamically-generated JSX elements
+		return this.state.annotations.map((annotation)=>{
+			return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} />);
+				// pass comment's id as unique key; helps performance
+		});
+	}
+	_updateAnnotations(newAnnotations){
+		event.preventDefault();
+		console.log("~~~~newAnnotation~~~~");
+		console.log(newAnnotations);
+		console.log("~~~end newAnnotation");
+		this.setState({ annotations: newAnnotations })
 	}
 	render(){
-		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations}>
-		</Resume><Annotation x={25} y={26} type="content"/></div>;
+		const annotations = this._getAnnotations();
+		console.log("ResumeBox.state.annotations: "+this.state.annotations);
+		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
+		</Resume>{annotations}</div>;
 	}
 }
+
+
 
 class Annotation extends React.Component{
 	render(){
@@ -124,10 +155,9 @@ class Annotation extends React.Component{
 				color = "green";
 				break;
 		}
-
 		const annotation_style={
-			top: this.props.x,
-			left: this.props.y,
+			top: this.props.y,
+			left: this.props.x,
 			background: color
 		};
 		return <div className="annotation-marker" style={annotation_style} />;
