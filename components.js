@@ -1,10 +1,4 @@
 class ResumeScreen extends React.Component{
-	constructor(){
-		super();
-		this.state = {
-			annotations: []
-		}
-	}
 	render(){
 		return <div className="row resume-screen">
 			<ResumeBox />
@@ -81,9 +75,9 @@ class Comment extends React.Component{
 class Resume extends React.Component{
 	_alertOnClick(e){
 		e.preventDefault();
-		console.log(" ");
+		// console.log(" ");
 		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft + document.getElementsByClassName('resume-screen')[0].offsetLeft;
-		console.log("X: "+(e.pageX - distance_from_left)+" Y:"+e.pageY);
+		// console.log("X: "+(e.pageX - distance_from_left)+" Y:"+e.pageY);
 		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar'};
 		this.props.onClick(newAnnotation);
 	}
@@ -104,30 +98,44 @@ class ResumeBox extends React.Component{
 			annotations : [
 				{ key:1, x: 14, y:28, type:'design', active:'false'},
 				{ key:2, x:299, y:210, type:'grammar', active:'false'},
-				{ key:3, x:20, y:400, type:'content', active:'true'}
+				{ key:3, x:20, y:400, type:'content', active:'false'}
 			]
 		}
 	}
 	_getAnnotations() { // returns array of dynamically-generated JSX elements
 		return this.state.annotations.map((annotation)=>{
-			return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} />);
+			// return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)} />);
+			return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)} />);
 				// pass comment's id as unique key; helps performance
 		});
 	}
-	_updateAnnotations(newAnnotation){
-		// event.preventDefault();
-		newAnnotation['key'] = this.state.annotations.length+1;
-		newAnnotation['active'] = true;
+	_makeInactive(){
 		let previousAnnotationsInactive = this.state.annotations;
 		previousAnnotationsInactive.forEach(function(i){
 			i['active']=false;
-		})
-		console.log("previous: "+previousAnnotationsInactive);
+		});
+		return previousAnnotationsInactive;
+	}
+	_makeActive(anno){
+		// anno.preventDefault();
+		console.log("anno: "+anno);
+		this.setState({annotations:this._makeInactive()});
+		let indexOfAnnotation = this.state.annotations.findIndex(function(a){return a.key==anno});
+		console.log(indexOfAnnotation)
+		this.state.annotations[indexOfAnnotation]['active']=true;
+	}
+
+
+	_updateAnnotations(newAnnotation){
+		event.preventDefault();
+		newAnnotation['key'] = this.state.annotations.length+1;
+		let previousAnnotationsInactive = this._makeInactive();
+		newAnnotation['active'] = true;
 		this.setState({annotations: previousAnnotationsInactive.concat([newAnnotation])})
 	}
+
 	render(){
 		const annotations = this._getAnnotations();
-		// console.log("render() ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
 		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
 		</Resume>{annotations}</div>;
 	}
@@ -136,6 +144,12 @@ class ResumeBox extends React.Component{
 
 
 class Annotation extends React.Component{
+	constructor(){
+		super();
+		this.state={
+			active: true
+		}
+	}
 	render(){
 		let color;
 		switch(this.props.type){
@@ -154,8 +168,15 @@ class Annotation extends React.Component{
 			left: this.props.x,
 			background: color,
 		};
-		this.props.active ? annotation_style['opacity']=0.8 : annotation_style['opacity']=0.4;
-		return <div className="annotation-marker" style={annotation_style} />;
+		this.props.active && this.state.active ? annotation_style['opacity']=0.8 : annotation_style['opacity']=0.4;
+		let k = this.props.k;
+		return <div className="annotation-marker" style={annotation_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} />;
+	}
+	_clickedAnnotation(event){
+		event.preventDefault();
+		console.log("annotation selected: ");
+		console.log(this._annoNum);
+		this.props.onClick(this._annoNum);
 	}
 }
 
