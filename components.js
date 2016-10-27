@@ -65,10 +65,29 @@ class Comment extends React.Component{
 
 
 class Resume extends React.Component{
+	constructor(){
+		super();
+		this.state={
+			annotations : []
+		}
+	}
+
+	// _addComment(author, body){
+	// 	const comment = {author,body};
+	// 	jQuery.post('/api/comments', { comment }).success(newComment => {
+	// 		this.setState({ comments: this.state.comments.concat([newComment]) });
+	// 		// state is only updated when we get new comment from API request
+	// 	})
+	// }
+
+
 	_alertOnClick(e){
 		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft;
 		console.log("X: "+(e.pageX-distance_from_left)+" Y:"+e.pageY);
+		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY};
+		this.setState({annotations: this.state.annotations.concat([newAnnotation]) })
 	}
+
 	render(){
 		return <div className="medium-8 column"><img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  /></div>;
 	}
