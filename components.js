@@ -164,9 +164,10 @@ class Annotation extends React.Component{
 			annotation_marker_style['opacity']=0.4;
 		}
 		let k = this.props.k;
-		return <div className={this.props.k}><div className="annotation-marker" style={annotation_marker_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} >
-			
-		</div><input autoFocus ref={(input) => this._tf = input} className="annotation-editor" style={annotation_editor_style} >{this.props.text}</input></div>;
+		return <div className={"annotation-container annotation-container-"+this.props.k}>
+			<div className="annotation-marker" style={annotation_marker_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} />
+			<input autoFocus ref={(input) => this._tf = input} className="annotation-editor" style={annotation_editor_style} >{this.props.text}</input>
+		</div>;
 	}
 	_clickedAnnotation(event){
 		event.preventDefault();
