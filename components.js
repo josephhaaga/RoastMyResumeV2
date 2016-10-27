@@ -34,7 +34,6 @@ class Comment extends React.Component{
 	}
 	render() {
 		if(this.props.commentType=='design'){
-
 			return (
 				<div className="comment design">
 					<p className="comment-body">
@@ -42,9 +41,7 @@ class Comment extends React.Component{
 					</p>
 				</div>
 			)
-
 		}else if(this.props.commentType=='grammar'){
-
 			return (
 				<div className="comment grammar">
 					<p className="comment-body">
@@ -52,9 +49,7 @@ class Comment extends React.Component{
 					</p>
 				</div>
 			)
-
 		}else if(this.props.commentType=='content'){
-
 			return (
 				<div className="comment content">
 					<p className="comment-body">
@@ -62,14 +57,20 @@ class Comment extends React.Component{
 					</p>
 				</div>
 			)
-
 		}
 	}
 }
 
+
+
+
 class Resume extends React.Component{
+	_alertOnClick(e){
+		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft;
+		console.log("X: "+(e.pageX-distance_from_left)+" Y:"+e.pageY);
+	}
 	render(){
-		return <div className="medium-8 column"><img src={this.props.imgsrc} /></div>;
+		return <div className="medium-8 column"><img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  /></div>;
 	}
 }
 
