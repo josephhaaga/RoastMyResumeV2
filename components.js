@@ -28,7 +28,7 @@ class CommentBox extends React.Component{
 	}
 	render(){
 		const comments = this._getComments();
-		console.log("CommentBox.state.comments: "+this.state.comments);		
+		// console.log("CommentBox.state.comments: "+this.state.comments);		
 		return <div className="medium-4 column"> {comments} </div>;
 	}
 	_getComments(){
@@ -81,22 +81,25 @@ class Comment extends React.Component{
 class Resume extends React.Component{
 	constructor(){
 		super();
-		this.state={
-			annotations:[				
-				{ key:1, x: 14, y:28, type:'design'},
-				{ key:2, x:299, y:210, type:'grammar'},
-				{ key:3, x:20, y:400, type:'content'}
-			]
-		}
+		// this.state={
+		// 	annotations:[				
+		// 		{ key:1, x: 14, y:28, type:'design'},
+		// 		{ key:2, x:299, y:210, type:'grammar'},
+		// 		{ key:3, x:20, y:400, type:'content'}
+		// 	]
+		// }
 	}
 	_alertOnClick(e){
 		e.preventDefault();
+		console.log(" ");
 		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft + document.getElementsByClassName('resume-screen')[0].offsetLeft;
 		console.log("X: "+(e.pageX - distance_from_left)+" Y:"+e.pageY);
-		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar', key:this.state.annotations.length+1};
-		this.setState({annotations: this.state.annotations.concat([newAnnotation]) });
+		// let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar', key:this.state.annotations.length+1};
+		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar'};
+		// this.setState({annotations: this.state.annotations.concat([newAnnotation]) });
 		// pass newAnnotation Up
-		this.props.onClick(this.state.annotations);
+		// this.props.onClick(this.state.annotations);
+		this.props.onClick(newAnnotation);
 	}
 	render(){
 		return <div className="medium-8 column">
@@ -125,17 +128,14 @@ class ResumeBox extends React.Component{
 				// pass comment's id as unique key; helps performance
 		});
 	}
-	_updateAnnotations(newAnnotations){
+	_updateAnnotations(newAnnotation){
 		event.preventDefault();
-		// console.log("~~~~newAnnotation~~~~");
-		// console.log(newAnnotations);
-		// console.log("~~~end newAnnotation");
-		this.setState({ annotations: newAnnotations });
-		console.log("ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
+		newAnnotation['key'] = this.state.annotations.length+1;
+		this.setState({annotations: this.state.annotations.concat([newAnnotation])})
 	}
 	render(){
 		const annotations = this._getAnnotations();
-		console.log("ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
+		console.log("render() ResumeBox.state.annotations: "+JSON.stringify(this.state.annotations));
 		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
 		</Resume>{annotations}</div>;
 	}
