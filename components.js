@@ -80,12 +80,12 @@ class Resume extends React.Component{
 	// 	})
 	// }
 
-
 	_alertOnClick(e){
 		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft;
 		console.log("X: "+(e.pageX-distance_from_left)+" Y:"+e.pageY);
 		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY};
-		this.setState({annotations: this.state.annotations.concat([newAnnotation]) })
+		this.setState({annotations: this.state.annotations.concat([newAnnotation]) });
+		this.props.onClick(newAnnotation);
 	}
 
 	render(){
@@ -93,9 +93,17 @@ class Resume extends React.Component{
 	}
 }
 
+
+
+
 class ResumeBox extends React.Component{
+
+	_updateAnnotations(newAnnotation){
+		console.log("ResumeBox._updateAnnotations() called");
+		console.log("  "+newAnnotation);
+	}
 	render(){
-		return <Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" />;
+		return <Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations} />;
 	}
 }
 
