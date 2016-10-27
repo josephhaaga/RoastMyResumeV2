@@ -6,6 +6,14 @@
 	transform: translate(30%,-50%);
 }
 
+.annotation-editor{
+	width:200px;
+	height:50px;
+	position: absolute;
+	background:white;
+	display:none;
+}
+
 .resume{
 	position:relative;
 }

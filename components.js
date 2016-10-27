@@ -8,7 +8,6 @@ class ResumeScreen extends React.Component{
 }
 
 
-
 class CommentBox extends React.Component{
 	constructor(){
 		super();
@@ -32,7 +31,6 @@ class CommentBox extends React.Component{
 		});
 	}
 }
-
 
 
 class Comment extends React.Component{
@@ -69,44 +67,17 @@ class Comment extends React.Component{
 	}
 }
 
-
-
-
-class Resume extends React.Component{
-	_alertOnClick(e){
-		e.preventDefault();
-		// console.log(" ");
-		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft + document.getElementsByClassName('resume-screen')[0].offsetLeft;
-		// console.log("X: "+(e.pageX - distance_from_left)+" Y:"+e.pageY);
-		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar'};
-		this.props.onClick(newAnnotation);
-	}
-	render(){
-		return <div className="medium-8 column">
-			<img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  />
-		</div>;
-	}
-}
-
-
-
-
 class ResumeBox extends React.Component{
 	constructor(){
 		super();
 		this.state={
-			annotations : [
-				{ key:1, x: 14, y:28, type:'design', active:'false'},
-				{ key:2, x:299, y:210, type:'grammar', active:'false'},
-				{ key:3, x:20, y:400, type:'content', active:'false'}
-			]
+			annotations : []
 		}
 	}
 	_getAnnotations() { // returns array of dynamically-generated JSX elements
 		return this.state.annotations.map((annotation)=>{
-			// return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)} />);
+			// return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)}/>);
 			return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)} />);
-				// pass comment's id as unique key; helps performance
 		});
 	}
 	_makeInactive(){
@@ -117,15 +88,10 @@ class ResumeBox extends React.Component{
 		return previousAnnotationsInactive;
 	}
 	_makeActive(anno){
-		// anno.preventDefault();
-		console.log("anno: "+anno);
 		this.setState({annotations:this._makeInactive()});
 		let indexOfAnnotation = this.state.annotations.findIndex(function(a){return a.key==anno});
-		console.log(indexOfAnnotation)
 		this.state.annotations[indexOfAnnotation]['active']=true;
 	}
-
-
 	_updateAnnotations(newAnnotation){
 		event.preventDefault();
 		newAnnotation['key'] = this.state.annotations.length+1;
@@ -133,7 +99,6 @@ class ResumeBox extends React.Component{
 		newAnnotation['active'] = true;
 		this.setState({annotations: previousAnnotationsInactive.concat([newAnnotation])})
 	}
-
 	render(){
 		const annotations = this._getAnnotations();
 		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
@@ -141,6 +106,20 @@ class ResumeBox extends React.Component{
 	}
 }
 
+
+class Resume extends React.Component{
+	_alertOnClick(e){
+		e.preventDefault();
+		let distance_from_left = document.getElementsByClassName('resumeImage')[0].offsetLeft + document.getElementsByClassName('resume-screen')[0].offsetLeft;
+		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY, type:'grammar'};
+		this.props.onClick(newAnnotation);
+	}
+	render(){
+		return <div className="medium-8 column">
+			<img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  />
+		</div>;
+	}
+}
 
 
 class Annotation extends React.Component{
@@ -163,22 +142,27 @@ class Annotation extends React.Component{
 				color = "green";
 				break;
 		}
-		const annotation_style={
+		const annotation_marker_style={
 			top: this.props.y,
 			left: this.props.x,
 			background: color,
 		};
-		this.props.active && this.state.active ? annotation_style['opacity']=0.8 : annotation_style['opacity']=0.4;
+		const annotation_editor_style={
+			top: this.props.y,
+			left: this.props.x+30
+		};
+		this.props.active && this.state.active ? annotation_marker_style['opacity']=0.8 : annotation_marker_style['opacity']=0.4;
 		let k = this.props.k;
-		return <div className="annotation-marker" style={annotation_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} />;
+		return <div><div className="annotation-marker" style={annotation_marker_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} >
+			
+		</div><textfield className="annotation-editor" style={annotation_editor_style} >{this.props.text}</textfield></div>;
 	}
 	_clickedAnnotation(event){
 		event.preventDefault();
-		console.log("annotation selected: ");
-		console.log(this._annoNum);
 		this.props.onClick(this._annoNum);
 	}
 }
+
 
 ReactDOM.render(<ResumeScreen />,document.getElementById('resume-app'));
 
