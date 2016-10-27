@@ -85,11 +85,13 @@ class Resume extends React.Component{
 		console.log("X: "+(e.pageX-distance_from_left)+" Y:"+e.pageY);
 		let newAnnotation = {x: e.pageX-distance_from_left, y: e.pageY};
 		this.setState({annotations: this.state.annotations.concat([newAnnotation]) });
-		this.props.onClick(newAnnotation);
+		this.props.onClick(newAnnotation); // pass newAnnotation Up
 	}
 
 	render(){
-		return <div className="medium-8 column"><img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  /></div>;
+		return <div className="medium-8 column">
+			<img className="resumeImage" src={this.props.imgsrc}  onClick={this._alertOnClick.bind(this)}  />
+		</div>;
 	}
 }
 
@@ -103,7 +105,32 @@ class ResumeBox extends React.Component{
 		console.log("  "+newAnnotation);
 	}
 	render(){
-		return <Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations} />;
+		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations}>
+		</Resume><Annotation x={25} y={26} type="content"/></div>;
+	}
+}
+
+class Annotation extends React.Component{
+	render(){
+		let color;
+		switch(this.props.type){
+			case 'grammar':
+				color = "purple";
+				break;
+			case 'design':
+				color = "red";
+				break;
+			case 'content':
+				color = "green";
+				break;
+		}
+
+		const annotation_style={
+			top: this.props.x,
+			left: this.props.y,
+			background: color
+		};
+		return <div className="annotation-marker" style={annotation_style} />;
 	}
 }
 
