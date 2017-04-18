@@ -14,6 +14,10 @@
 	display:none;
 }
 
+.annotation-container{
+	background:gray;
+}
+
 .resume{
 	position:relative;
 }
