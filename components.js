@@ -77,7 +77,7 @@ class ResumeBox extends React.Component{
 	_getAnnotations() { // returns array of dynamically-generated JSX elements
 		return this.state.annotations.map((annotation)=>{
 			// return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)}/>);
-			return (<Annotation x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)} />);
+			return (<Annotation body={annotation.body} x={annotation.x} y={annotation.y} type={annotation.type} key={annotation.key} k={annotation.key} active={annotation.active} onClick={this._makeActive.bind(this)} />);
 		});
 	}
 	_makeInactive(){
@@ -102,8 +102,8 @@ class ResumeBox extends React.Component{
 	}
 	render(){
 		const annotations = this._getAnnotations();
-		return <div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
-		</Resume>{annotations}</div>;
+		return <div className="medium-8 column"><div className="resume"><Resume imgsrc="http://i.imgur.com/sFq0wAC.jpg" onClick={this._updateAnnotations.bind(this)}>
+		</Resume>{annotations}</div></div>;
 	}
 }
 
@@ -129,10 +129,15 @@ class Annotation extends React.Component{
 		this.state={
 			active: true
 		}
+		this.handleTextChange = this.handleTextChange.bind(this);
 	}
 	componentDidMount(){
 		console.log(this._tf);
 		this._tf.focus();
+	}
+	handleTextChange(event){
+		this.setState({body: event.target.value});
+		// this.props.content = event.target.value;
 	}
 	render(){
 		let color;
@@ -166,7 +171,7 @@ class Annotation extends React.Component{
 		let k = this.props.k;
 		return <div className={"annotation-container annotation-container-"+this.props.k}>
 			<div className="annotation-marker" style={annotation_marker_style} ref={(div) => this._annoNum = k} onClick={this._clickedAnnotation.bind(this)} />
-			<input autoFocus ref={(input) => this._tf = input} className="annotation-editor" style={annotation_editor_style} >{this.props.text}</input>
+			<input autoFocus ref={(input) => this._tf = input} className="annotation-editor" style={annotation_editor_style} onChange={this.handleTextChange} >{this.props.text}</input>
 		</div>;
 	}
 	_clickedAnnotation(event){
